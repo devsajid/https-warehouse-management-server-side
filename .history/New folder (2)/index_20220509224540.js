@@ -7,9 +7,6 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 app.use(cors());
 app.use(express.json());
-
-// MONGODB CONNECTION
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.yhskc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
@@ -17,91 +14,46 @@ const client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1,
 });
 
-// DATABASE CONNECTION
 async function run() {
   try {
     await client.connect();
     const inventoryCollection = client
       .db("car-warehouse-management-app")
       .collection("car-managment");
-    const myCollection = client.db("warehouse").collection("MyItems");
     console.log("Database Connect Hoise");
-
-    // PRODUCT (MYITEM) ALL LOAD
+    //myItem
+    // const myItems = client.db("car-warehouse-management-app").collection("myItem");
+    // console.log("Database Connect Hoise 3");
+    // myItem
     app.get("/myItem", async (req, res) => {
       const query = {};
-      const cursor = myCollection.find(query);
+      const cursor = myItems.find(query);
       const items = await cursor.toArray();
       res.send(items);
     });
 
     // PRODUCT (MYITEM) SINGLE LOAD
-    app.get("/MyItems/:id", async (req, res) => {
+    app.get("/myItem/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const items = await myCollection.findOne(query);
       res.send(items);
     });
 
-    // PRODUCT (MYITEM) SINGLE POST
-    app.post("/MyItems", async (req, res) => {
-      const newProduct = req.body;
-      const result = await myCollection.insertOne(newProduct);
-      res.send(result);
-    });
-
-    // PRODUCT (MYITEM) SINGLE UPDATE
-    app.put("/MyItems/:id", async (req, res) => {
-      const id = req.params.id;
-      const updateUser = req.body;
-      const filter = { _id: ObjectId(id) };
-      const options = { upsert: true };
-      const updateDoc = {
-        $set: {
-          name: updateUser.name,
-          price: updateUser.price,
-          description: updateUser.description,
-        },
-      };
-      const result = await myCollection.updateOne(filter, updateDoc, options);
-      req.send(result);
-    });
-
-    // PRODUCT ITEM SINGLE DELETE
-    app.delete("/MyItems/:id", async (req, res) => {
+    app.get(`/Warehouse-item/:id`, async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      const result = await myCollection.deleteOne(query);
-      res.send(result);
+      const item = await inventoryCollection.findOne(query);
+      res.send(item);
     });
-
-    //=========== START INVENTORY ITEM ENDPOINT ============
-
-    // PRODUCT ITEM ALL LOAD
-    app.get("/Items", async (req, res) => {
-      const query = {};
-      const cursor = inventoryCollection.find(query);
-      const items = await cursor.toArray();
-      res.send(items);
-    });
-
-    // PRODUCT ITEM SINGLE LOAD
-    app.get("/Items/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const items = await inventoryCollection.findOne(query);
-      res.send(items);
-    });
-
-    // PRODUCT ITEM SINGLE POST
-    app.post("/Items", async (req, res) => {
+    // POST
+    app.post("/Warehouse-item/", async (req, res) => {
       const newProduct = req.body;
       const result = await inventoryCollection.insertOne(newProduct);
       res.send(result);
     });
-
     // PRODUCT ITEM SINGLE UPDATE
-    app.put("/Items/:id", async (req, res) => {
+    app.put("/Warehouse-item/:id", async (req, res) => {
       const id = req.params.id;
       const updateUser = req.body;
       const filter = { _id: ObjectId(id) };
@@ -110,7 +62,6 @@ async function run() {
         $set: {
           name: updateUser.name,
           price: updateUser.price,
-          description: updateUser.description,
         },
       };
       const result = await inventoryCollection.updateOne(
@@ -122,7 +73,7 @@ async function run() {
     });
 
     // PRODUCT ITEM SINGLE DELETE
-    app.delete("/Items/:id", async (req, res) => {
+    app.delete("/Warehouse-item/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await inventoryCollection.deleteOne(query);
@@ -134,12 +85,10 @@ async function run() {
 
 run().catch(console.dir);
 
-// ROOT ENDPOINT
 app.get("/", (req, res) => {
-  res.send(" Hello From Warehouse Server !");
+  res.send("Hello server ready ache !");
 });
 
-// PORT
 app.listen(port, () => {
   console.log(`listening  on port ${port}`);
 });

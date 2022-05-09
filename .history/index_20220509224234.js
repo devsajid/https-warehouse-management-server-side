@@ -28,7 +28,7 @@ async function run() {
     console.log("Database Connect Hoise");
 
     // PRODUCT (MYITEM) ALL LOAD
-    app.get("/myItem", async (req, res) => {
+    app.get("/MyItems", async (req, res) => {
       const query = {};
       const cursor = myCollection.find(query);
       const items = await cursor.toArray();

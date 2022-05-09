@@ -7,9 +7,6 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 app.use(cors());
 app.use(express.json());
-
-// MONGODB CONNECTION
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.yhskc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
@@ -17,7 +14,6 @@ const client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1,
 });
 
-// DATABASE CONNECTION
 async function run() {
   try {
     await client.connect();
@@ -134,12 +130,10 @@ async function run() {
 
 run().catch(console.dir);
 
-// ROOT ENDPOINT
 app.get("/", (req, res) => {
-  res.send(" Hello From Warehouse Server !");
+  res.send("Hello server ready ache !");
 });
 
-// PORT
 app.listen(port, () => {
   console.log(`listening  on port ${port}`);
 });
