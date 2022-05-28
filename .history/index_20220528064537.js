@@ -26,9 +26,7 @@ async function run() {
     const inventoryCollection = client
       .db("Warehouse-management-user-app")
       .collection("Items");
-    const myCollection = client
-      .db("Warehouse-management-user-app")
-      .collection("MyItems");
+    const myCollection = client.db("warehouse").collection("MyItems");
     console.log("Database Connect Hoise");
 
     //VERIFY JWT

@@ -11,7 +11,7 @@ app.use(express.json());
 
 // MONGODB CONNECTION
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.yhskc.mongodb.net/?retryWrites=true&w=majority`;
+// const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.fb0jm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
@@ -23,12 +23,8 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
-    const inventoryCollection = client
-      .db("Warehouse-management-user-app")
-      .collection("Items");
-    const myCollection = client
-      .db("Warehouse-management-user-app")
-      .collection("MyItems");
+    const inventoryCollection = client.db("warehouse").collection("Items");
+    const myCollection = client.db("warehouse").collection("MyItems");
     console.log("Database Connect Hoise");
 
     //VERIFY JWT
